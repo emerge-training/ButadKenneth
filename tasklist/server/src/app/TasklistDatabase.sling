@@ -14,7 +14,6 @@ model Task
     description as string
     timeStampAdded as long
     timeStampLastUpdated as long
-
 }
 
 const TASK = "task"
@@ -35,9 +34,9 @@ func forContext(ctx as LoggingContext) static as this
 func updateTable(table as SQLTableInfo)
 {
     if not table:
-        Error.throw("nullTabel", "updateTable")
-    if not db:
         Error.throw("nullTable", "updateTable")
+    if not db:
+        Error.throw("nullDb", "updateTable")
     if not db.ensureTableExistsSync(table):
         Error.throw("failedToUpdateTable", table.getName())
 }
@@ -48,6 +47,8 @@ func updateTables
     task.addStringKeyColumn("id")
     task.addStringColumn("name")
     task.addStringColumn("description")
+    task.addLongColumn("timeStampAdded")
+    task.addLongColumn("timeStampLastUpdated")
     updateTable(task)
 }
 
@@ -93,7 +94,6 @@ func getTasks as DynamicMap
     var data = new DynamicMap()
     data.setObject("records", v)
     return data
-
 }
 
 func close

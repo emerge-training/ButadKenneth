@@ -5,9 +5,9 @@ class is ScreenForWidget #screen #main:
 
 var navi as NavigationWidget
 
-func initialized override
+func initialize override
 {
-    base.initialized()
+    base.initialize()
     navi = new NavigationWidget(context)
     navi.setWidgetEnableActionBar(false)
     setWidget(navi)

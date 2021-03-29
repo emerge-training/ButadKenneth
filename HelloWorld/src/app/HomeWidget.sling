@@ -21,3 +21,4 @@ func initializeWidget override
 
 func getWidgetTitle as string:
     return "Simple Hello World"
+    
