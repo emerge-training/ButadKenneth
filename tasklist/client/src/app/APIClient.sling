@@ -14,7 +14,7 @@ func create(context as GuiApplicationContext, parentWidget as Widget = null) sta
 {
     assert context
     instance = new this()
-    instance.setApiUrl("http://localhost:8080")
+    instance.setApiUrl("http://ec2-13-212-104-166.ap-southeast-1.compute.amazonaws.com:30086")
     instance.setContext(context)
     if parentWidget:
         instance.setParentWidget(parentWidget)
@@ -48,4 +48,3 @@ func deleteTask(id as string, callback as function<void, DynamicMap>, errorCallb
 
 func getTasks(callback as function<void, DynamicMap>, errorCallback as function<void, Error> = null):
     doGet("/tasks", callback, errorCallback)
-    

@@ -1,4 +1,4 @@
-import jk.widget
+import jk.widget.common
 
 class is TitledWidget #widget:
 
@@ -22,14 +22,15 @@ func initializeWidget override
     APIClient.getInstance().getTasks(func(response as DynamicMap){
         var data = assert response.getDynamicMap("data")
         var records = data.getDynamicVector("records")
-        if not records || records.getSize() < 1{
-            list.addWidget(AlignWidget.forWidget(context, LabelWidget.forText(context, "No records")), 1.0)
+        if not records || records.getSize() < 1 {
+            list.addWidget(AlignWidget.forWidget(context, LabelWidget.forText(context, "No record")), 1.0)
         }
         else {
             foreach record as DynamicMap in records.toVector() {
                 var task = record.getString("name") .. " - " .. record.getString("description")
                 var lblTask = LabelWidget.forText(context, task)
                 var hbox = HorizontalBoxWidget.forContext(context, 0, context.getHeightValue("0.5mm"))
+                hbox.addWidget(lblTask)
                 list.addWidget(AlignWidget.forWidget(context, hbox), 1.0)
             }
         }
@@ -38,3 +39,4 @@ func initializeWidget override
 
 func getWidgetTitle as string:
     return "Task list"
+    
