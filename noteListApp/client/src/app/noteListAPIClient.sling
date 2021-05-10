@@ -1,0 +1,51 @@
+import jk.widget.web
+import jk.ui
+import jk.widget
+
+class is JSONAPIClientWithGui:
+
+pvar widgetDefaultErrorHandler as function<void, Error>
+var instance static as this
+
+func getInstance static as this:
+    return instance
+
+func create(context as GuiApplicationContext, parentWidget as Widget = null) static as this
+{
+    assert context
+    instance = new this()
+    instance.setApiUrl("")
+    instance.setContext(context)
+    if parentWidget:
+        instance.setParentWidget(parentWidget)
+    return instance
+}
+
+func onError(error as Error, callback as function<void,Error>) override
+{
+    assert callback:
+        onDefaultErrorHandler(error)
+    base.onError(error, callback)
+}
+
+func onDefaultErrorHandler(error as Error) override
+{
+    var context = assert getContext()
+    assert error
+    assert widgetDefaultErrorHandler:
+        context.showErrorDialog(error.toString())
+    widgetDefaultErrorHandler(error)
+}
+
+func addNotelist(data as DynamicMap, callback as function<void, DynamicMap>, errorCallback as function<void, Error>):
+    doPost("/note", data, callback, errorCallback)
+
+func updateNotelist(id as string, data as DynamicMap, callback as function<void, DynamicMap>, errorCallback as function<void, Error>):
+    doPut("/note/" .. id, data, callback, errorCallback)
+
+func deleteNotelist(id as string, callback as function<void, DynamicMap>, errorCallback as function<void, Error>):
+    doDelete("/note/" .. id, callback, errorCallback)
+
+func getNotelist(callback as function<void, DynamicMap>, errorCallback as function<void, Error> = null):
+    doGet("/note", callback, errorCallback)
+    

@@ -1,0 +1,76 @@
+import jk.widget.common
+import jk.widget.datagrid
+
+class #widget:
+
+
+
+ui VerticalBoxWidget
+{
+    spacing = context.getHeightValue("2000um")
+    margin = context.getHeightValue("5mm")
+    HorizontalBoxWidget {
+        spacing = context.getHeightValue("100um")
+        TextButtonWidget btnAdd : 1.0 {
+            text = "Add"
+            padding = context.getHeightValue("1000um")
+            backgroundColor = Color.instance("#3385ff")
+            clickHandler = func {
+                onViewClicked()
+            }
+        
+        }
+    }
+    VerticalScrollerWidget {
+		scrollBarDisabled = true
+		LayerWithBackgroundColorWidget container {
+            color = Color.instance("#5d89e8")
+		AlignWidget {
+			VerticalBoxWidget vbox : 0.5, 0.5, false {
+				margin = context.getHeightValue("20000um")
+				spacing = context.getHeightValue("2000um") 
+                LabelWidget {
+					text = "NOTE LIST"
+					textColor = Color.black()
+					fontSize = context.getHeightValue("5mm")
+					textAlign = LabelWidget.ALIGN_CENTER
+					fontBold = true
+				}  
+            } 
+        }
+        DataGridWidget grid{
+                    cellPadding = 1
+        }
+    }
+    }
+}
+
+func initializeWidget override
+{
+    base.initializeWidget()
+
+	grid.addColumn("ID", "id", 3.0)
+	grid.addColumn("Note", "note", 3.0)
+	grid.addColumn("Description", "description", 3.0)
+  
+
+	grid.addWidgetHeaderRow()
+    noteListAPIClient.getInstance().getNotelist(func(response as DynamicMap){
+        var data = assert response.getDynamicMap("data")
+        var records = data.getDynamicVector("records")
+        if not records || records.getSize() < 1{
+            grid.addRow([ "Nothing to view." ])
+        }
+        else {
+            foreach record as DynamicMap in records.toVector() {
+                
+                grid.addRow([ record.getString("id"), record.getString("note"), record.getString("description") ])
+            }
+        }
+    },func(err as Error){
+        grid.addRow([ "Error" ])
+    })
+}
+
+func onViewClicked:
+    NavigationWidget.switchToContainer(this, new noteListAdd(context))
