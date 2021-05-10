@@ -1,0 +1,102 @@
+import jk.widget
+import jk.widget.common
+
+
+class #widget:
+
+model Task
+{
+    id as string
+    name as string
+    description as string
+    timeStampAdded as long
+    timeStampLastUpdated as long
+
+}
+
+
+ui LayerWidget
+{
+	
+	CanvasWidget {
+		color = Color.instance("#f0f8ff")
+		
+	}
+	VerticalScrollerWidget {
+		AlignWidget {
+			marginLeft = 400
+			marginRight = 400
+			VerticalBoxWidget vbox : 0.5, 0.5, true {
+				margin = context.getHeightValue("5000um")
+				spacing = context.getHeightValue("2000um")
+				
+				LabelWidget {
+					text = "ADD TASK"
+					textColor = Color.black()
+					fontSize = context.getHeightValue("8mm")
+					textAlign = LabelWidget.ALIGN_CENTER
+					fontBold = true
+				}
+				
+                TextInputWidget id {
+					type = TextInputWidget.TYPE_NAME
+					placeholder = "ID"
+					backgroundColor = Color.white()
+					fontSize = context.getHeightValue("3mm")
+					padding = context.getHeightValue("2500um")
+				}
+                 TextInputWidget name {
+					type = TextInputWidget.TYPE_NAME
+					placeholder = "Name"
+					backgroundColor = Color.white()
+					fontSize = context.getHeightValue("3mm")
+					padding = context.getHeightValue("2500um")
+				}
+				TextInputWidget description {
+					type = TextInputWidget.TYPE_NAME
+					placeholder = "Description"
+					backgroundColor = Color.white()
+					fontSize = context.getHeightValue("3mm")
+					padding = context.getHeightValue("2500um")
+				}
+                
+               
+			}
+		}
+	}
+}
+
+func initializeWidget override
+{
+    base.initializeWidget()
+    var confirmbtn = ButtonWidget.forText(context, "ADD", func {
+		var admin = new Task()
+		admin.setId(id.getWidgetText())
+		admin.setName(name.getWidgetText())
+		admin.setDescription(description.getWidgetText())
+		
+		APIClient.getInstance().addTask(admin.toDynamicMap(), func(res as DynamicMap){
+			context.showMessageDialog("Notice", "Added Succefully")
+			id.setWidgetText("")
+			name.setWidgetText("")
+			description.setWidgetText("")
+			
+		}, func(err as Error){
+			context.showMessageDialog("Notice", "Failed to add")
+		})
+
+	})
+    var returnbtn = ButtonWidget.forText(context, "Check Tasklist Data", func{
+		 NavigationWidget.switchToContainer(this, new TaskList(context))
+	})
+   	confirmbtn.setWidgetBackgroundColor(Color.instance("#008CBA"))
+	confirmbtn.setWidgetTextColor(Color.white())
+	confirmbtn.setWidgetFontSize(context.getHeightValue("4mm"))
+	returnbtn.setWidgetBackgroundColor(Color.instance("#008CBA"))
+	returnbtn.setWidgetTextColor(Color.white())
+	returnbtn.setWidgetFontSize(context.getHeightValue("4mm"))
+	
+	
+	vbox.addWidget(confirmbtn)
+	vbox.addWidget(returnbtn)
+}

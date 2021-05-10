@@ -14,7 +14,7 @@ func create(context as GuiApplicationContext, parentWidget as Widget = null) sta
 {
     assert context
     instance = new this()
-    instance.setApiUrl("http://ec2-13-212-104-166.ap-southeast-1.compute.amazonaws.com:30086")
+    instance.setApiUrl("http://ec2-13-250-114-49.ap-southeast-1.compute.amazonaws.com:30086")
     instance.setContext(context)
     if parentWidget:
         instance.setParentWidget(parentWidget)
