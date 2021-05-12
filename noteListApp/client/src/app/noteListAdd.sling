@@ -19,7 +19,8 @@ ui VerticalBoxWidget
         TextButtonWidget btnHome : 1.0 {
             text = "VIEW NOTE"
             padding = context.getHeightValue("1000um")
-            backgroundColor = Color.instance("Orange")
+            backgroundColor = Color.instance("#658dc9")
+			textColor = Color.white()
             clickHandler = func {
                 onViewClicked()
             }
@@ -29,16 +30,17 @@ ui VerticalBoxWidget
 	VerticalScrollerWidget {
 		scrollBarDisabled = true
 		LayerWithBackgroundColorWidget container {
-            color = Color.instance("blue")
+            color = Color.instance("#bfc2c7")
 		AlignWidget {
-			VerticalBoxWidget vbox : 0.5, 0.5, false {
+			VerticalBoxWidget vbox : 0.5,1, true {
 				margin = context.getHeightValue("5mm")
-				spacing = context.getHeightValue("2000um")
+				spacing = context.getHeightValue("100um")
 				LabelWidget {
-					text = "ADD NOTE"
+					text = "New Note"
 					textColor = Color.black()
 					fontSize = context.getHeightValue("4mm")
-					fontBold = true
+					fontFamily = "Raleway-Regular"
+					
 				}
 				TextInputWidget note {
 					type = TextInputWidget.TYPE_NAME
@@ -79,6 +81,6 @@ func initializeWidget override
 			context.showMessageDialog("Notice","Failed to Save Note!")
 		})
 })
-	savebtn.setWidgetFontSize(context.getHeightValue("4mm"))
+	savebtn.setWidgetFontSize(context.getHeightValue("3mm"))
 	vbox.addWidget(savebtn)
 }

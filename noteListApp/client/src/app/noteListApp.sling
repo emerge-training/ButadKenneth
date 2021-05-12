@@ -12,9 +12,10 @@ ui VerticalBoxWidget
     HorizontalBoxWidget {
         spacing = context.getHeightValue("100um")
         TextButtonWidget btnAdd : 1.0 {
-            text = "Add"
+            text = "Add Note"
             padding = context.getHeightValue("1000um")
-            backgroundColor = Color.instance("#3385ff")
+            backgroundColor = Color.instance("#658dc9")
+            textColor = Color.white()
             clickHandler = func {
                 onViewClicked()
             }
@@ -24,7 +25,7 @@ ui VerticalBoxWidget
     VerticalScrollerWidget {
 		scrollBarDisabled = true
 		LayerWithBackgroundColorWidget container {
-            color = Color.instance("#5d89e8")
+            color = Color.instance("#658dc9")
 		AlignWidget {
 			VerticalBoxWidget vbox : 0.5, 0.5, false {
 				margin = context.getHeightValue("20000um")
@@ -34,7 +35,6 @@ ui VerticalBoxWidget
 					textColor = Color.black()
 					fontSize = context.getHeightValue("5mm")
 					textAlign = LabelWidget.ALIGN_CENTER
-					fontBold = true
 				}  
             } 
         }
