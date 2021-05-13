@@ -1,0 +1,100 @@
+import jk.log
+import jk.sqlite
+import jk.mysql
+import jk.sql
+import jk.env
+import jk.time
+
+class:
+
+model Notelist
+{
+    id as int
+    note as string
+    description as string
+    
+
+}
+
+const NOTELIST ="notelist"
+pvar db as MySQLDatabase
+
+func forContext(ctx as LoggingContext) static as this
+{
+    var cstr = EnvironmentVariable.get("TASK_DATABASE")
+    Log.debug(ctx, "Opening database connection: '" .. cstr .. "'")
+    db = MySQLDatabase.forConnectionStringSync(ctx, cstr)
+    if not db:
+        Error.throw("failedToConnectToDatabase", cstr)
+    var v = new this()
+    v.setDb(db)
+    return v
+}
+
+func updateTable(table as SQLTableInfo)
+{
+    if not table:
+        Error.throw("nullTabel", "updateTable")
+    if not db:
+        Error.throw("nullTable", "updateTable")
+    if not db.ensureTableExistsSync(table):
+        Error.throw("failedToUpdateTable", table.getName())
+}
+
+func updateTables
+{
+    var notelist = SQLTableInfo.forName(NOTELIST)
+    notelist.addIntegerKeyColumn("id")
+    notelist.addStringColumn("note")
+    notelist.addStringColumn("description")
+    
+    updateTable(notelist)
+}
+
+
+
+func addNote(notelist as Notelist) as Notelist
+{
+    assert notelist
+    assert db.executeSync(db.prepareInsertStatementSync(NOTELIST, notelist.toDynamicMap()))
+    return notelist
+}
+func updateNote(id as string, notelist as Notelist) as bool
+{
+    assert notelist
+    var criteria = new Notelist()
+     criteria.setIdValue(String.toInteger(id))
+    return db.executeSync(db.prepareUpdateStatementSync(NOTELIST, criteria.toDynamicMap(), notelist.toDynamicMap()))
+}
+func getNote as DynamicMap
+{
+    var v = new vector<Notelist>
+    var it = assert db.querySync(db.prepareQueryAllStatementSync(NOTELIST)):
+        return null
+    while it {
+        var o = it.next()
+        if not o:
+            break
+        var notelist = Notelist.forJsonObject(o)
+        if not notelist:
+            continue
+        v += notelist
+    }
+    var data = new DynamicMap()
+    data.setObject("records", v)
+    return data
+
+}
+ func deleteNote(id as string) as bool
+{
+    var criteria = new Notelist()
+      criteria.setIdValue(String.toInteger(id))
+    return db.executeSync(db.prepareDeleteStatementSync(NOTELIST, criteria.toDynamicMap()))
+}
+
+func close
+{
+    if db:
+        db.closeSync()
+    db = null
+}

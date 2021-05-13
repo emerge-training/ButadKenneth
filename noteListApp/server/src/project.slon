@@ -1,0 +1,10 @@
+{
+    vendorId "eqela"
+    projectId "NotelistApp"
+    title "Sling NotelistApp"
+    libraries [
+        "jk-server:0.19.0"
+        "jk-db:0.19.0"
+        
+    ]
+}

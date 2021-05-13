@@ -1,9 +1,10 @@
 #! eqela ss-0.21
 #
-# This file is a part of Sling Tasklist
-# Copyright (c) 2021 eqela
-# All rights reserved.
+#This is part of Sling NotelistApp
+#Copyright (c) 2021 eqela
+#All rights reserved.
 #
-lib sling-tools:0.45.0
+
+lib sling-tools:0.34.0
 import sling.tools.compiler
-SlingCompilerTool.forWeb5ApplicationDirectory("app").executeScript(args)
+SlingCompilerTool.forSushiApplicationDirectory("app").executeScript(args)

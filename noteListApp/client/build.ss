@@ -1,6 +1,6 @@
 #! eqela ss-0.21
 #
-# This file is a part of Sling Tasklist
+# This file is a part of Sling NotelistApp
 # Copyright (c) 2021 eqela
 # All rights reserved.
 #
