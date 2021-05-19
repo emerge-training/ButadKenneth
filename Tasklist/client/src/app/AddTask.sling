@@ -31,9 +31,9 @@ ui LayerWidget
 				spacing = context.getHeightValue("2000um")
 				
 				LabelWidget {
-					text = "ADD TASK"
+					text = "Add New Task"
 					textColor = Color.black()
-					fontSize = context.getHeightValue("8mm")
+					fontSize = context.getHeightValue("5mm")
 					textAlign = LabelWidget.ALIGN_CENTER
 					fontBold = true
 				}
@@ -69,7 +69,7 @@ ui LayerWidget
 func initializeWidget override
 {
     base.initializeWidget()
-    var confirmbtn = ButtonWidget.forText(context, "ADD", func {
+    var addbtn = ButtonWidget.forText(context, "Add", func {
 		var admin = new Task()
 		admin.setId(id.getWidgetText())
 		admin.setName(name.getWidgetText())
@@ -82,21 +82,21 @@ func initializeWidget override
 			description.setWidgetText("")
 			
 		}, func(err as Error){
-			context.showMessageDialog("Notice", "Failed to add")
+			context.showMessageDialog("Notice", "Failed to Add New Task")
 		})
 
 	})
-    var returnbtn = ButtonWidget.forText(context, "Check Tasklist Data", func{
+    var viewbtn = ButtonWidget.forText(context, "View Data", func{
 		 NavigationWidget.switchToContainer(this, new TaskList(context))
 	})
-   	confirmbtn.setWidgetBackgroundColor(Color.instance("#008CBA"))
-	confirmbtn.setWidgetTextColor(Color.white())
-	confirmbtn.setWidgetFontSize(context.getHeightValue("4mm"))
-	returnbtn.setWidgetBackgroundColor(Color.instance("#008CBA"))
-	returnbtn.setWidgetTextColor(Color.white())
-	returnbtn.setWidgetFontSize(context.getHeightValue("4mm"))
+   	addbtn.setWidgetBackgroundColor(Color.instance("#008CBA"))
+	addbtn.setWidgetTextColor(Color.white())
+	addbtn.setWidgetFontSize(context.getHeightValue("4mm"))
+	viewbtn.setWidgetBackgroundColor(Color.instance("#008CBA"))
+	viewbtn.setWidgetTextColor(Color.white())
+	viewbtn.setWidgetFontSize(context.getHeightValue("4mm"))
 	
 	
-	vbox.addWidget(confirmbtn)
-	vbox.addWidget(returnbtn)
+	vbox.addWidget(addbtn)
+	vbox.addWidget(viewbtn)
 }

@@ -41373,7 +41373,7 @@ function app.TasklistConfig:getAllowedOrigins()
 	do return {
 		"http://localhost:8080",
 		"http://localhost:8081",
-		"http://ec2-13-212-103-99.ap-southeast-1.compute.amazonaws.com:30087"
+		"http://ec2-13-228-75-243.ap-southeast-1.compute.amazonaws.com:30085"
 	} end
 end
 
@@ -41577,7 +41577,7 @@ end
 
 function app.TasklistDatabase:forContext(ctx)
 	local cstr = _g.jk.env.EnvironmentVariable:get("TASK_DATABASE")
-	do _g.jk.log.Log:debug(ctx, "Opening database connection: '" .. _g.jk.lang.String:safeString(cstr) .. "'") end
+	do _g.jk.log.Log:debug(ctx, "Connecting to database: '" .. _g.jk.lang.String:safeString(cstr) .. "'") end
 	self.db = _g.jk.mysql.MySQLDatabase:forConnectionStringSync(ctx, cstr)
 	if not (self.db ~= nil) then
 		do _g.jk.lang.Error:throw("failedToConnectToDatabase", cstr) end
@@ -41591,10 +41591,10 @@ end
 
 function app.TasklistDatabase:updateTable(table)
 	if not (table ~= nil) then
-		do _g.jk.lang.Error:throw("nullTable", "updateTable") end
+		do _g.jk.lang.Error:throw("nullTabel", "updateTable") end
 	end
 	if not (self.db ~= nil) then
-		do _g.jk.lang.Error:throw("nullDb", "updateTable") end
+		do _g.jk.lang.Error:throw("nullTable", "updateTable") end
 	end
 	if not self.db:ensureTableExistsSync(table) then
 		do _g.jk.lang.Error:throw("failedToUpdateTable", table:getName()) end
@@ -41840,7 +41840,7 @@ function app.TasklistApiHandler:initRoutes()
 			do self:setOkResponse(resp, nil) end
 		end
 	end) end
-	do self:addRoute("PUT", "/task/:id", function(req, resp, vars)
+	do self:addRoute("PUT", "/task", function(req, resp, vars)
 		local requestData = _g.app.TasklistApiHandler.TaskRequest:forJsonString(req:getBodyString())
 		if not (requestData ~= nil) then
 			do self:setErrorResponse(resp, "invalidRequest", "500") end
@@ -41857,7 +41857,7 @@ function app.TasklistApiHandler:initRoutes()
 			do self:setOkResponse(resp, nil) end
 		end
 	end) end
-	do self:addRoute("DELETE", "/task/:id", function(req, resp, vars)
+	do self:addRoute("DELETE", "/task", function(req, resp, vars)
 		if not self:getDatabase():deleteTask(vars:getString("id", nil)) then
 			do self:setErrorResponse(resp, "failedToDeleteTask", "500") end
 			do return end

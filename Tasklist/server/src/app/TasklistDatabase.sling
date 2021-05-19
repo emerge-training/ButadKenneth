@@ -14,6 +14,7 @@ model Task
     description as string
     timeStampAdded as long
     timeStampLastUpdated as long
+
 }
 
 const TASK = "task"
@@ -22,7 +23,7 @@ pvar db as MySQLDatabase
 func forContext(ctx as LoggingContext) static as this
 {
     var cstr = EnvironmentVariable.get("TASK_DATABASE")
-    Log.debug(ctx, "Opening database connection: '" .. cstr .. "'")
+    Log.debug(ctx, "Connecting to database: '" .. cstr .. "'")
     db = MySQLDatabase.forConnectionStringSync(ctx, cstr)
     if not db:
         Error.throw("failedToConnectToDatabase", cstr)
@@ -34,9 +35,9 @@ func forContext(ctx as LoggingContext) static as this
 func updateTable(table as SQLTableInfo)
 {
     if not table:
-        Error.throw("nullTable", "updateTable")
+        Error.throw("nullTabel", "updateTable")
     if not db:
-        Error.throw("nullDb", "updateTable")
+        Error.throw("nullTable", "updateTable")
     if not db.ensureTableExistsSync(table):
         Error.throw("failedToUpdateTable", table.getName())
 }
@@ -66,14 +67,14 @@ func updateTask(id as string, task as Task) as bool
     assert task
     task.setTimeStampLastUpdatedValue(SystemClock.asUTCSeconds())
     var criteria = new Task()
-    criteria.setId(id)
+     criteria.setId(id)
     return db.executeSync(db.prepareUpdateStatementSync(TASK, criteria.toDynamicMap(), task.toDynamicMap()))
 }
 
 func deleteTask(id as string) as bool
 {
     var criteria = new Task()
-    criteria.setId(id)
+      criteria.setId(id)
     return db.executeSync(db.prepareDeleteStatementSync(TASK, criteria.toDynamicMap()))
 }
 
@@ -94,6 +95,7 @@ func getTasks as DynamicMap
     var data = new DynamicMap()
     data.setObject("records", v)
     return data
+
 }
 
 func close

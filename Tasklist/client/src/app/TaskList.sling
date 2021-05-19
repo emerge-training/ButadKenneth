@@ -1,40 +1,64 @@
 import jk.widget.common
+import jk.widget.datagrid
 
 class is TitledWidget #widget:
 
 ui LayerWidget
 {
     VerticalScrollerWidget {
-        scrollBarDisabled = true
-        LayerWithBackgroundColorWidget container {
-            color = Color.white()
-            VerticalBoxWidget list {
-                margin = context.getHeightValue("5mm")
-                spacing = context.getHeightValue("5mm")
-            }
-        }
+        AlignWidget {
+			marginLeft = 400
+			marginRight = 400
+			VerticalBoxWidget list : 0.5, 0.5, true {
+				margin = context.getHeightValue("5mm")
+				spacing = context.getHeightValue("5mm")
+				
+                LabelWidget {
+					text = "Task Data"
+					textColor = Color.black()
+					fontSize = context.getHeightValue("5mm")
+					textAlign = LabelWidget.ALIGN_CENTER
+					fontBold = true
+				}
+                DataGridWidget table{
+                    cellPadding = 2
+                }
+				
+			}
+		}
     }
 }
 
 func initializeWidget override
 {
     base.initializeWidget()
+    table.addColumn("Name","name",2.0)
+    table.addColumn("Description","description",2.0)
+    table.addWidgetHeaderRow()
     APIClient.getInstance().getTasks(func(response as DynamicMap){
         var data = assert response.getDynamicMap("data")
         var records = data.getDynamicVector("records")
-        if not records || records.getSize() < 1 {
-            list.addWidget(AlignWidget.forWidget(context, LabelWidget.forText(context, "No record")), 1.0)
+        if not records || records.getSize() < 1{
+            table.addRow([ "Nothing to view." ])
         }
         else {
             foreach record as DynamicMap in records.toVector() {
-                var task = record.getString("name") .. " - " .. record.getString("description")
-                var lblTask = LabelWidget.forText(context, task)
-                var hbox = HorizontalBoxWidget.forContext(context, 0, context.getHeightValue("0.5mm"))
-                hbox.addWidget(lblTask)
-                list.addWidget(AlignWidget.forWidget(context, hbox), 1.0)
+                
+                table.addRow([record.getString("name"), record.getString("description") ])
             }
         }
+    },func(err as Error){
+        table.addRow([ "Error" ])
     })
+    
+    var addbtn = ButtonWidget.forText(context, "New Task", func{
+		 NavigationWidget.switchToContainer(this, new AddTask(context))
+	})
+    addbtn.setWidgetBackgroundColor(Color.instance("#008CBA"))
+	addbtn.setWidgetTextColor(Color.white())
+	addbtn.setWidgetFontSize(context.getHeightValue("4mm"))
+
+    list.addWidget(addbtn)
 }
 
 func getWidgetTitle as string:
